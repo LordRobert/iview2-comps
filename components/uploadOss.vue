@@ -215,11 +215,18 @@ vm.$refs.uploadoss.getFileList()
                     self.upload(data, _currentFileName, _currentFileObj)
                 })
             },
+            resetCropperLoading() {
+                this.cropperOpt.loading = false
+                this.$nextTick(() => {
+                    this.cropperOpt.loading = true
+                })
+            },
             upload (base64, name, newFile) {
                 var self = this
                 _getSTS().then((datas) => {
                     self.save2OSS(datas, base64, datas.dir + '/' + name, newFile)
                 }).catch((err) => {
+                    self.resetCropperLoading()
                     self.$Message.error('网络发生错误，请稍后再试')
                     let index = self.fileList.findIndex((item) => { return item.id === newFile.id })
                     self.fileList.splice(index, 1)
@@ -240,11 +247,13 @@ vm.$refs.uploadoss.getFileList()
                 var buffer = _base64toBuffer(base64)
                 client.put(key, buffer).then((result) => {
                     if (result.res.status === '200' || result.res.status === 200) {
+                        self.cropperOpt.visible = false
                         console.log(result)
                         newFile.id = result.name.substring(1)
                         newFile.url = result.url
                         newFile.state = 'add'
                     } else {
+                        self.resetCropperLoading()
                         self.$Message.error('上传失败：' + JSON.stringify(result))
                         let index = self.fileList.findIndex((item) => { return item.id === newFile.id })
                         self.fileList.splice(index, 1)

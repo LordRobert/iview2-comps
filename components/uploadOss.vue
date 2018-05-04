@@ -57,7 +57,7 @@ options示例：
     limit: 1,
     multiple: false
 }
-cropOpt
+cropOption
 {
     enable: true,
     width: 200,
@@ -206,8 +206,8 @@ vm.$refs.uploadoss.getFileList()
             showCropper(base64) {
                 this.cropperOpt.autoCropWidth = this.cropOption.width || 200;
                 this.cropperOpt.autoCropHeight = this.cropOption.height || 200;
+                this.cropperOpt.img = base64;
                 this.cropperOpt.visible = true;
-                this.cropperOpt.img = base64
             },
             clipOk() {
                 var self = this
